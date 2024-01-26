@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #535cc8; /* Set your background color */
+      }
+
+      form {
+        width: 600px;
+        padding: 20px;
+        position: relative; /* Make the form a positioned container */
+      }
+
+      .input-line {
+        display: flex;
+        justify-content: space-evenly;
+        margin-top: 100px;
+      }
+
+      .input-group {
+        margin-bottom: 20px;
+      }
+
+      .input-box {
+        border: 2px solid #f5781a; /* Set the border color for the input box */
+        border-radius: 5px;
+        background-color: #f5781a;
+      }
+
+      .input-group label {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .input-group input {
+        padding: 8px;
+        box-sizing: border-box;
+        margin: 10px;
+      }
+
+      button {
+        background-color: #f5781a; /* Set the background color for the button */
+        color: #fff;
+        padding: 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .signup-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <form method="post">
+      {% csrf_token %}
+
+      <!-- Signup Button -->
+      <button type="button" class="signup-button">Sign up</button>
+
+      <!-- Username and Password Input Line -->
+      <div class="input-line">
+        <!-- Username Input Group -->
+        <div class="input-group">
+          <div class="input-box">
+            <input
+              type="text"
+              name="username"
+              id="id_username"
+              required
+              placeholder="Username"
+            />
+          </div>
+        </div>
+
+        <!-- Password Input Group -->
+        <div class="input-group">
+          <div class="input-box">
+            <input
+              type="password"
+              name="password"
+              id="id_password"
+              required
+              placeholder="Password"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" style="margin-left: 55%">Login</button>
+    </form>
+  </body>
+</html>

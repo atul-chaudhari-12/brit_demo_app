@@ -1,0 +1,8 @@
+[client]
+database = demo_app_db
+host = db
+user = demo_db_user
+password = Sweet_1210
+default-character-set = utf8
+interactive_timeout = 28800
+wait_timeout = 28800
