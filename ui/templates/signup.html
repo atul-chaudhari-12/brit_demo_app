@@ -66,14 +66,15 @@
   <body>
     <form method="post" action="{{ self_path }}">
       {% csrf_token %}
-      <button
-        type="button"
-        class="signup-button"
-        onclick="window.location.href='/auth/signup'"
-      >
-        Sign up
-      </button>
       <div class="input-line">
+        <div class="input-group">
+          <div class="input-box">{{form.first_name}}</div>
+        </div>
+        <div class="input-group">
+          <div class="input-box">{{form.last_name}}</div>
+        </div>
+      </div>
+      <div class="input-line" style="margin-top: 5px">
         <div class="input-group">
           <div class="input-box">{{form.username}}</div>
         </div>
@@ -81,20 +82,7 @@
           <div class="input-box">{{form.password}}</div>
         </div>
       </div>
-      {% if form.username.errors %}
-      <p
-        style="
-          color: #a50d0d;
-          font-size: 12px;
-          font-weight: bold;
-          text-align: center;
-          margin-top: auto;
-        "
-      >
-        The email address and/or password you specified are not correct.
-      </p>
-      {% endif %}
-      <button type="submit" style="margin-left: 55%">Login</button>
+      <button type="submit" style="margin-left: 75%">Sign Up</button>
     </form>
   </body>
 </html>

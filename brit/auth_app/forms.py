@@ -20,11 +20,11 @@ class UsernameField(forms.CharField):
 class UserAuthenticationForm(forms.Form):
     username = UsernameField(
         label="Email", 
-        widget=forms.TextInput(attrs={"autofocus": True, "class": "form-control"}))
+        widget=forms.TextInput(attrs={"autofocus": True, "class": "form-control", "placeholder":"Email", "required":"required"}))
     password = forms.CharField(
         label=("Password"),
         strip=False,
-        widget=forms.PasswordInput(attrs={"autocomplete": "current-password", "class": "form-control"}),
+        widget=forms.PasswordInput(attrs={"autocomplete": "current-password", "class": "form-control", "placeholder":"Password", "required":"required"}),
     )
 
     error_messages = {
@@ -85,3 +85,37 @@ class UserAuthenticationForm(forms.Form):
     def get_invalid_login_error(self):
         self.add_error("username", self.error_messages["invalid_login"])
         return ValidationError(self.error_messages["invalid_login"], code="invalid_login")
+    
+class SignUpFormView(forms.Form):
+    username = UsernameField(
+        label="Email", 
+        widget=forms.TextInput(attrs={"autofocus": True, "class": "form-control", "placeholder":"Email", "required":"required"}))
+    password = forms.CharField(
+        label=("Password"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "current-password", "class": "form-control", "placeholder":"Password", "required":"required"}),
+    )
+    first_name = forms.CharField(
+        label="First_name", 
+        widget=forms.TextInput(attrs={"autofocus": True, "class": "form-control", "placeholder":"First Name", "required":"required"}))
+    last_name = forms.CharField(
+        label="Last_Name", 
+        widget=forms.TextInput(attrs={"autofocus": True, "class": "form-control", "placeholder":"Last Name", "required":"required"}))
+
+    error_messages = {
+        "invalid_login": "Please enter a correct %(username)s and password. Note that both " "fields may be case-sensitive.",
+        "inactive": "This account is inactive.",
+        "invalid_otp": "Wrong OTP",
+    }
+
+    def __init__(self, request=None, *args, **kwargs):   
+        self.request = request
+        self.user_cache = None
+        super().__init__(*args, **kwargs)
+
+        self.username_field = UserModel._meta.get_field(UserModel.USERNAME_FIELD)
+        username_max_length = self.username_field.max_length or 254
+        self.fields["username"].max_length = username_max_length
+        self.fields["username"].widget.attrs["maxlength"] = username_max_length
+        if self.fields["username"].label is None:
+            self.fields["username"].label = capfirst(self.username_field.verbose_name)
