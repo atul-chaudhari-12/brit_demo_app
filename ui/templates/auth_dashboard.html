@@ -147,7 +147,7 @@
       function onRemoveItemButtonClick(item_id) {
         $.ajax({
           type: "DELETE",
-          url: `/auth/products/${item_id}`,
+          url: `/products/product/${item_id}`,
           headers: {
             "X-CSRFToken": "{{ csrf_token }}",
           },
@@ -171,7 +171,7 @@
         let name = document.getElementById("product_name").value;
         let price = document.getElementById("product_price").value;
         $.ajax({
-          url: `/auth/products`,
+          url: `/products/list`,
           type: "POST",
           headers: {
             "X-CSRFToken": "{{ csrf_token }}",
@@ -229,7 +229,7 @@
         {% endfor %}
       </table>
       <button
-        onclick="window.location.href='/auth/summary'"
+        onclick="window.location.href='/dashboard/summary'"
         class="summary-btn"
       >
         Summary

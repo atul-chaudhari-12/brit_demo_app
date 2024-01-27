@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Products
+from products.models import Products
 
 class ProductSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True)
