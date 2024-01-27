@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #535cc8; /* Set your background color */
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 5px;
+      }
+
+      .item-table-cls {
+        width: 300px;
+        background-color: white;
+      }
+
+      .summary-btn {
+        background-color: #f5781a; /* Set the background color for the button */
+        color: #fff;
+        padding: 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: 75%;
+        margin-top: 10%;
+      }
+
+      .submit-product-btn {
+        background-color: #f5781a;
+        color: #fff;
+        padding: 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      form {
+        width: 600px;
+        padding: 20px;
+        position: relative; /* Make the form a positioned container */
+      }
+
+      .input-line {
+        display: flex;
+      }
+
+      .input-group {
+        margin-bottom: 20px;
+      }
+
+      .input-box {
+        border: 2px solid #f5781a; /* Set the border color for the input box */
+        border-radius: 5px;
+        background-color: #f5781a;
+        margin: 10px;
+      }
+
+      .input-group label {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .input-group input {
+        padding: 8px;
+        box-sizing: border-box;
+        margin: 10px;
+      }
+
+      .logout-btn {
+        right: 11px;
+        position: absolute;
+        top: 10px;
+        color: white;
+        font-weight: bold;
+        font-size: 20px;
+      }
+
+      .open-add-product-popup-btn {
+        right: 11px;
+        position: absolute;
+        top: 50px;
+        color: white;
+        font-weight: bold;
+        font-size: 20px;
+      }
+
+      /* Modal */
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0); /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+      }
+
+      /* Modal Content/Box */
+      .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 30%; /* Could be more or less, depending on screen size */
+      }
+
+      /* The Close Button */
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
+    <script>
+      $.ajaxSetup({
+        data: { csrfmiddlewaretoken: "{{ csrf_token }}" },
+      });
+      function onRemoveItemButtonClick(item_id) {
+        $.ajax({
+          type: "DELETE",
+          url: `/auth/products/${item_id}`,
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          success: function (orders) {
+            window.location.reload();
+          },
+        });
+      }
+
+      onBtnclick = function () {
+        let modal = document.getElementById("add-product-model");
+        modal.style.display = "block";
+      };
+
+      onClosePopupButtonClick = function () {
+        let modal = document.getElementById("add-product-model");
+        modal.style.display = "none";
+      };
+
+      onAddProductButtonClick = function () {
+        let name = document.getElementById("product_name").value;
+        let price = document.getElementById("product_price").value;
+        $.ajax({
+          url: `/auth/products`,
+          type: "POST",
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+          contentType: "application/json", // Set content type to JSON
+          data: JSON.stringify({
+            name: name,
+            price: price,
+          }),
+          success: function (orders) {
+            window.location.reload();
+          },
+        });
+      };
+    </script>
+  </head>
+  <body>
+    <div>
+      <a href="/auth/logout" class="logout-btn">Logout</a>
+      <a
+        href="javascript:void(0)"
+        onclick="onBtnclick()"
+        class="open-add-product-popup-btn"
+        >Add Product</a
+      >
+      <!-- <button
+        type="button"
+        style="margin-bottom: 15px"
+        id="myBtn"
+        onclick="onBtnclick()"
+        class="summary-btn"
+      >
+        Add Product
+      </button> -->
+      <table class="item-table-cls">
+        <tr>
+          <th>Item</th>
+          <th>Price (£)</th>
+          <th>&nbsp;</th>
+        </tr>
+        {% for product in products %}
+        <tr>
+          <td>{{product.name}}</td>
+          <td>{{product.price}}</td>
+          <td>
+            {% if products_count > 1 %}
+            <a
+              href="javascript:void(0)"
+              onclick="onRemoveItemButtonClick(`{{product.id}}`)"
+              >X</a
+            >
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      <button
+        onclick="window.location.href='/auth/summary'"
+        class="summary-btn"
+      >
+        Summary
+      </button>
+    </div>
+
+    <div id="add-product-model" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <button
+          class="close"
+          style="background: none; border: none"
+          id="close-popup"
+          onclick="onClosePopupButtonClick()"
+        >
+          &times;
+        </button>
+        <div>
+          <form>
+            <div class="input-line">
+              <div class="input-group">
+                <div class="input-box">
+                  <input
+                    type="text"
+                    name="product_name"
+                    placeholder="Item Name"
+                    id="product_name"
+                  />
+                </div>
+              </div>
+              <div class="input-group">
+                <div class="input-box">
+                  <input
+                    type="number"
+                    name="product_price"
+                    placeholder="Price"
+                    id="product_price"
+                  />
+                </div>
+              </div>
+            </div>
+          </form>
+          <button
+            style="margin-left: 65%"
+            class="submit-product-btn"
+            onclick="onAddProductButtonClick()"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

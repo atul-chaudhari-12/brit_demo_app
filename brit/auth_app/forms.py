@@ -1,9 +1,11 @@
 
 import unicodedata
 from django import forms
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from django.core.exceptions import ValidationError
+from django.utils.text import capfirst
 
+UserModel = get_user_model()
 class UsernameField(forms.CharField):
     def to_python(self, value):
         return unicodedata.normalize("NFKC", super().to_python(value))
@@ -16,7 +18,9 @@ class UsernameField(forms.CharField):
         }
 
 class UserAuthenticationForm(forms.Form):
-    username = UsernameField(label="Email", widget=forms.TextInput(attrs={"autofocus": True, "class": "form-control"}))
+    username = UsernameField(
+        label="Email", 
+        widget=forms.TextInput(attrs={"autofocus": True, "class": "form-control"}))
     password = forms.CharField(
         label=("Password"),
         strip=False,
@@ -30,13 +34,20 @@ class UserAuthenticationForm(forms.Form):
     }
 
     def __init__(self, request=None, *args, **kwargs):
-        """
-        The 'request' parameter is set for custom auth use by subclasses.
-        The form data comes in via the standard 'data' kwarg.
-        """
+    #     """
+    #     The 'request' parameter is set for custom auth use by subclasses.
+    #     The form data comes in via the standard 'data' kwarg.
+    #     """    
         self.request = request
         self.user_cache = None
         super().__init__(*args, **kwargs)
+
+        self.username_field = UserModel._meta.get_field(UserModel.USERNAME_FIELD)
+        username_max_length = self.username_field.max_length or 254
+        self.fields["username"].max_length = username_max_length
+        self.fields["username"].widget.attrs["maxlength"] = username_max_length
+        if self.fields["username"].label is None:
+            self.fields["username"].label = capfirst(self.username_field.verbose_name)
         
 
     def clean(self):
@@ -59,7 +70,6 @@ class UserAuthenticationForm(forms.Form):
                 raise self.get_invalid_login_error()
             else:
                 self.confirm_login_allowed(self.user_cache)
-
         return self.cleaned_data
 
     def confirm_login_allowed(self, user):        

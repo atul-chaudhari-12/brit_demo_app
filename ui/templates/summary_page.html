@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #535cc8; /* Set your background color */
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 5px;
+      }
+
+      .item-table-cls {
+        min-width: 200px;
+        background-color: white;
+      }
+
+      button {
+        background-color: #f5781a; /* Set the background color for the button */
+        color: #fff;
+        padding: 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: 75%;
+        margin-top: 10%;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <table class="item-table-cls">
+        <tr>
+          <td style="text-align: center">
+            Total Cost: &nbsp;{{products_count}}
+          </td>
+        </tr>
+      </table>
+      <button onclick="window.location.href='/auth/dashboard'">Back</button>
+    </div>
+  </body>
+</html>

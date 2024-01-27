@@ -29,7 +29,9 @@ SECRET_KEY = 'django-insecure-v@y^%t$#761nd8e&i)lx7$$h9(*6)^24cj=h1l&#z1fzidd!t&
 DEBUG = True
 
 ALLOWED_HOSTS = []
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
+LOGIN_URL = '/auth/login'
 
 # Application definition
 
@@ -40,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',    
-    
+    'auth_app'
 ]
 
 MIDDLEWARE = [
