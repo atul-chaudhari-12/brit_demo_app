@@ -66,7 +66,6 @@ class SignUpFormView(FormView):
         return "dashboard"
     
     def form_valid(self, form):
-        import ipdb;ipdb.set_trace()
         username = form.cleaned_data.get("username")
         password = form.cleaned_data.get("password")
         first_name = form.cleaned_data.get("first_name")
