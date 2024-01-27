@@ -1,0 +1,43 @@
+version: '3.5'
+services:
+    db:
+        image: mariadb:10.1.41
+        environment:
+            MYSQL_DATABASE: demo_app_db
+            MYSQL_USER: demo_db_user
+            MYSQL_PASSWORD: Sweet_1210
+            MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - dbdata:/var/lib/mysql
+            - ./local_db:/docker-entrypoint-initdb.d
+    adminer:
+        user: root
+        image: adminer:latest
+        restart: unless-stopped
+        environment:
+            ADMINER_DESIGN: pepa-linha
+        ports:
+            - 8085:8080    
+    memcached:
+        image: memcached:latest
+        ports:
+            - 11213:11211    
+    web-django:
+        build:
+            context: .
+            dockerfile: docker/Dockerfile
+        image: verificient/web:django_3.2
+        stdin_open: true
+        tty: true
+        restart: unless-stopped
+        ports:
+            - 8002:8000
+        volumes:
+            - .:/home/vscode/brit_demo_app            
+            - $HOME/.ssh:/home/vscode/.ssh
+        command: sleep infinity
+        depends_on:
+            - db            
+            - memcached
+volumes:
+    dbdata:

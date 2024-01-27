@@ -1,0 +1,7 @@
+echo -e "Welcome to Brit docker"
+echo -e "${BLUE}Installing oh-my-zsh...${CLEAR_COLOR}"
+echo -e ""
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+echo -e ""
+echo -e "${GREEN}Installed oh-my-zsh!${CLEAR_COLOR}"
+echo -e ""
